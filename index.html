@@ -76,7 +76,7 @@ body:not(.standalone) .installCard{display:block}
 <button class="action" style="width:100%" onclick="finishWorkout()">✓ Concluir e salvar treino</button>
 <div class="section">Histórico</div><div class="card" id="history"></div>
 <div class="card"><b>Progressão</b><div class="note">Use uma carga que deixe aproximadamente 2–3 repetições na reserva. Quando atingir o topo da faixa em todas as séries com boa execução, aumente a menor carga disponível.</div></div>
-<div style="text-align:center;color:#728078;font-size:11px;padding:8px 0 2px">Meu Treino • v2.3</div></main></div>
+<div style="text-align:center;color:#728078;font-size:11px;padding:8px 0 2px">Meu Treino • v2.4</div></main></div>
 <div class="timer compact">
   <div class="time"><b id="timer">01:30</b><span class="timerLabel">descanso</span></div>
   <div class="timerBtns"><button class="light" onclick="startTimer(90)">▶ 90s</button><button class="dark resetBtn" onclick="resetTimer()">↺</button><button class="dark" onclick="toggleTimerSize()">↕</button></div>
@@ -168,14 +168,35 @@ mobility:`<svg viewBox="0 0 130 92"><text x="9" y="10" font-size="7" fill="#7180
 };
 
 let timer=null, remain=90, currentExercise=0;
+
+const safeStore = (() => {
+  try {
+    const testKey="__meutreino_test__";
+    window.localStorage.setItem(testKey,"1");
+    window.localStorage.removeItem(testKey);
+    return {
+      get:(k)=>{try{return window.localStorage.getItem(k)}catch(e){return null}},
+      set:(k,v)=>{try{window.localStorage.setItem(k,String(v))}catch(e){}},
+      remove:(k)=>{try{window.localStorage.removeItem(k)}catch(e){}}
+    };
+  } catch(e) {
+    const mem = {};
+    return {
+      get:(k)=>Object.prototype.hasOwnProperty.call(mem,k)?mem[k]:null,
+      set:(k,v)=>{mem[k]=String(v)},
+      remove:(k)=>{delete mem[k]}
+    };
+  }
+})();
+
 const dayMap={0:"Dom",2:"Ter",3:"Qua",5:"Sex",6:"Sáb"};
-const storedDay=localStorage.getItem("day");
+const storedDay=safeStore.get("day");
 const validDays=Object.keys(workouts);
 let day=(storedDay && validDays.includes(storedDay))
   ? storedDay
   : (dayMap[new Date().getDay()] || "Ter");
 if (!validDays.includes(day)) day="Ter";
-localStorage.setItem("day",day);
+safeStore.set("day",day);
 const key=(d,i,s,t)=>`${t}_${d}_${i}_${s}`;
 const seriesCount=t=>{const m=String(t).match(/\d+/);return m?parseInt(m[0]):1};
 
@@ -186,11 +207,11 @@ function renderTabs(){
  const el=document.querySelector("#tabs");el.innerHTML="";
  Object.keys(workouts).forEach(d=>{
    const b=document.createElement("button"); b.className="tab "+(d===day?"active":""); b.textContent=d;
-   b.onclick=()=>{day=d;localStorage.setItem("day",d);currentExercise=0;render()};
+   b.onclick=()=>{day=d;safeStore.set("day",d);currentExercise=0;render()};
    el.appendChild(b)
  })
 }
-function getHistory(){try{return JSON.parse(localStorage.getItem("history")||"[]")}catch{return []}}
+function getHistory(){try{return JSON.parse(safeStore.get("history")||"[]")}catch{return []}}
 function lastFor(name){
  const h=getHistory();
  for(const rec of h){
@@ -208,7 +229,7 @@ function render(){
  renderTabs(); renderWorkout(); renderHistory();
 }
 function renderWorkout(){
- if(!workouts[day]){day="Ter";localStorage.setItem("day",day)}
+ if(!workouts[day]){day="Ter";safeStore.set("day",day)}
  const w=workouts[day];
  document.querySelector("#heroTitle").textContent=w.title;
  document.querySelector("#heroDesc").textContent=w.desc;
@@ -220,12 +241,12 @@ function renderWorkout(){
  const list=document.querySelector("#list"); list.innerHTML="";
  let completed=0;
  w.ex.forEach((e,i)=>{
-   const done=localStorage.getItem(key(day,i,0,"exercise"))==="1"; if(done)completed++;
+   const done=safeStore.get(key(day,i,0,"exercise"))==="1"; if(done)completed++;
    const n=seriesCount(e[2]); let rows="";
    for(let s=1;s<=n;s++){
-     const kg=localStorage.getItem(key(day,i,s,"kg"))||"";
-     const reps=localStorage.getItem(key(day,i,s,"reps"))||"";
-     const sd=localStorage.getItem(key(day,i,s,"done"))==="1";
+     const kg=safeStore.get(key(day,i,s,"kg"))||"";
+     const reps=safeStore.get(key(day,i,s,"reps"))||"";
+     const sd=safeStore.get(key(day,i,s,"done"))==="1";
      rows+=`<div class="seriesRow">
        <div class="n">${s}</div>
        <input inputmode="decimal" aria-label="Carga série ${s}" placeholder="kg" value="${kg}" onchange="save('${day}',${i},${s},'kg',this.value)">
@@ -255,17 +276,17 @@ function renderWorkout(){
  const p=Math.round(completed/w.ex.length*100);
  document.querySelector("#pct").textContent=p+"%"; document.querySelector("#bar").style.width=p+"%";
 }
-function save(d,i,s,t,v){localStorage.setItem(key(d,i,s,t),v)}
+function save(d,i,s,t,v){safeStore.set(key(d,i,s,t),v)}
 function toggleSeries(d,i,s,n){
- const k=key(d,i,s,"done"), on=localStorage.getItem(k)==="1";
- localStorage.setItem(k,on?"0":"1");
+ const k=key(d,i,s,"done"), on=safeStore.get(k)==="1";
+ safeStore.set(k,on?"0":"1");
  if(!on) startTimer(90);
- let all=true;for(let x=1;x<=n;x++) if(localStorage.getItem(key(d,i,x,"done"))!=="1") all=false;
- localStorage.setItem(key(d,i,0,"exercise"),all?"1":"0"); renderWorkout();
+ let all=true;for(let x=1;x<=n;x++) if(safeStore.get(key(d,i,x,"done"))!=="1") all=false;
+ safeStore.set(key(d,i,0,"exercise"),all?"1":"0"); renderWorkout();
 }
 function toggleExercise(d,i){
- const k=key(d,i,0,"exercise"),on=localStorage.getItem(k)==="1";
- localStorage.setItem(k,on?"0":"1"); renderWorkout()
+ const k=key(d,i,0,"exercise"),on=safeStore.get(k)==="1";
+ safeStore.set(k,on?"0":"1"); renderWorkout()
 }
 function parseRest(txt){if(txt.includes("120"))return 120;if(txt.includes("90"))return 90;if(txt.includes("75"))return 75;if(txt.includes("60"))return 60;if(txt.includes("45"))return 45;return 90}
 function startRest(txt){startTimer(parseRest(txt))}
@@ -289,11 +310,11 @@ function finishWorkout(){
  const w=workouts[day];
  const rec={date:new Date().toISOString(),day,title:w.title,ex:w.ex.map((e,i)=>({
    name:e[0],sets:Array.from({length:seriesCount(e[2])},(_,j)=>({
-     kg:localStorage.getItem(key(day,i,j+1,"kg"))||"",
-     reps:localStorage.getItem(key(day,i,j+1,"reps"))||""
+     kg:safeStore.get(key(day,i,j+1,"kg"))||"",
+     reps:safeStore.get(key(day,i,j+1,"reps"))||""
    }))
  }))};
- const h=getHistory(); h.unshift(rec); localStorage.setItem("history",JSON.stringify(h.slice(0,60)));
+ const h=getHistory(); h.unshift(rec); safeStore.set("history",JSON.stringify(h.slice(0,60)));
  alert("Treino salvo no histórico."); renderHistory(); renderWorkout()
 }
 function renderHistory(){
@@ -307,8 +328,8 @@ function renderHistory(){
 function clearWeek(){
  if(confirm("Limpar apenas as marcações de conclusão? Cargas e histórico serão mantidos.")){
    Object.keys(workouts).forEach(d=>workouts[d].ex.forEach((e,i)=>{
-     localStorage.removeItem(key(d,i,0,"exercise"));
-     for(let s=1;s<=seriesCount(e[2]);s++)localStorage.removeItem(key(d,i,s,"done"))
+     safeStore.remove(key(d,i,0,"exercise"));
+     for(let s=1;s<=seriesCount(e[2]);s++)safeStore.remove(key(d,i,s,"done"))
    }));renderWorkout()
  }
 }
@@ -324,7 +345,16 @@ if ("serviceWorker" in navigator) {
     } catch (e) {}
   });
 }
-render();paint();
+try {
+  render();
+  paint();
+} catch (err) {
+  console.error("Meu Treino boot error:", err);
+  const hero=document.querySelector("#heroTitle");
+  const list=document.querySelector("#list");
+  if(hero) hero.textContent="Não foi possível carregar o treino";
+  if(list) list.innerHTML='<div class="card"><b>Erro ao iniciar</b><div class="note">Atualize a página. Se o problema continuar, envie um print desta tela.</div></div>';
+}
 
 </script>
 </body>
