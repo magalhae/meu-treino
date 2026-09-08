@@ -1,0 +1,12 @@
+MEU TREINO — PWA PARA IPHONE
+
+1. No computador, acesse https://app.netlify.com/drop
+2. Arraste a PASTA 'meu_treino_pwa' inteira para a página.
+   Se estiver usando o ZIP, descompacte-o antes e envie a pasta.
+3. O Netlify fornecerá um endereço terminado em .netlify.app.
+4. Abra esse endereço no Safari do iPhone.
+5. Toque no botão Compartilhar (quadrado com seta para cima).
+6. Escolha 'Adicionar à Tela de Início'.
+7. Confirme 'Adicionar'.
+
+O app salva cargas, repetições, séries concluídas e histórico no próprio navegador do iPhone.
