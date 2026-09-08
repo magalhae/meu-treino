@@ -5,13 +5,17 @@
 <title>Meu Treino</title></head><body><div class="app">
 <div class="top"><div class="row"><div><div class="title">Meu Treino</div><div class="small">Plano inicial • 5 dias por semana</div></div><button class="historyBtn" onclick="clearWeek()">↻ Semana</button></div><div class="tabs" id="tabs"></div></div>
 <main>
-<div class="hero"><h2 id="heroTitle"></h2><p id="heroDesc"></p><div class="stats"><div class="stat"><b id="count">0</b><span>exercícios</span></div><div class="stat"><b id="mins">~50</b><span>minutos</span></div><div class="stat"><b id="pct">0%</b><span>concluído</span></div></div><div class="progress"><div id="bar"></div></div></div>
-<div class="card"><b>Aquecimento</b><div class="note" id="warm"></div><div class="warn">Nas semanas 1–2, faça 2 séries na maioria dos exercícios. Priorize técnica. Não utilize aparelho com cabo desfiado, peça solta ou trava defeituosa.</div></div>
-<div id="installHint" class="card hidden"><b>Instalar no iPhone</b><div class="note">No Safari: Compartilhar → Adicionar à Tela de Início. Depois, o Meu Treino abrirá como um app.</div></div>
+<div class="hero"><h2 id="heroTitle"></h2><p id="heroDesc"></p><div class="today" id="today"></div>
+<div class="stats"><div class="stat"><b id="count">0</b><span>exercícios</span></div><div class="stat"><b id="mins">~50</b><span>minutos</span></div><div class="stat"><b id="pct">0%</b><span>concluído</span></div></div><div class="progress"><div id="bar"></div></div></div>
+<div class="card"><b>Aquecimento</b><div class="note" id="warm"></div><div class="notice">Nas semanas 1–2, priorize técnica e use 2 séries na maioria dos exercícios. Pare se sentir dor aguda, tontura ou mal-estar. Em aparelhos antigos, confira cabos, pinos, travas e estabilidade antes de usar.</div></div>
+<div class="card installCard"><b>Instalar no iPhone</b><div class="note">No Safari: Compartilhar → Adicionar à Tela de Início. Este aviso desaparece quando você abre pelo ícone instalado.</div></div>
 <div class="section">Exercícios</div><div id="list"></div>
-<button class="action" onclick="finishWorkout()">✓ Concluir e salvar treino</button>
+<button class="action" style="width:100%" onclick="finishWorkout()">✓ Concluir e salvar treino</button>
 <div class="section">Histórico</div><div class="card" id="history"></div>
-<div class="card"><b>Progressão</b><div class="note">Escolha uma carga que deixe aproximadamente 2–3 repetições na reserva. Quando atingir o topo da faixa em todas as séries com boa execução, aumente a menor carga disponível.</div></div>
+<div class="card"><b>Progressão</b><div class="note">Use uma carga que deixe aproximadamente 2–3 repetições na reserva. Quando atingir o topo da faixa em todas as séries com boa execução, aumente a menor carga disponível.</div></div>
 </main></div>
-<div class="timer"><div><b id="timer">01:30</b><span>descanso</span></div><div><button class="light" onclick="startTimer(90)">▶ 90s</button> <button class="dark" onclick="resetTimer()">↺</button></div></div>
+<div class="timer compact">
+  <div class="time"><b id="timer">01:30</b><span class="timerLabel">descanso</span></div>
+  <div class="timerBtns"><button class="light" onclick="startTimer(90)">▶ 90s</button><button class="dark resetBtn" onclick="resetTimer()">↺</button><button class="dark" onclick="toggleTimerSize()">↕</button></div>
+</div>
 <script src="app.js"></script></body></html>
