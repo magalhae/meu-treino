@@ -76,7 +76,7 @@ body:not(.standalone) .installCard{display:block}
 <button class="action" style="width:100%" onclick="finishWorkout()">✓ Concluir e salvar treino</button>
 <div class="section">Histórico</div><div class="card" id="history"></div>
 <div class="card"><b>Progressão</b><div class="note">Use uma carga que deixe aproximadamente 2–3 repetições na reserva. Quando atingir o topo da faixa em todas as séries com boa execução, aumente a menor carga disponível.</div></div>
-<div style="text-align:center;color:#728078;font-size:11px;padding:8px 0 2px">Meu Treino • v2.2</div></main></div>
+<div style="text-align:center;color:#728078;font-size:11px;padding:8px 0 2px">Meu Treino • v2.3</div></main></div>
 <div class="timer compact">
   <div class="time"><b id="timer">01:30</b><span class="timerLabel">descanso</span></div>
   <div class="timerBtns"><button class="light" onclick="startTimer(90)">▶ 90s</button><button class="dark resetBtn" onclick="resetTimer()">↺</button><button class="dark" onclick="toggleTimerSize()">↕</button></div>
@@ -170,7 +170,12 @@ mobility:`<svg viewBox="0 0 130 92"><text x="9" y="10" font-size="7" fill="#7180
 let timer=null, remain=90, currentExercise=0;
 const dayMap={0:"Dom",2:"Ter",3:"Qua",5:"Sex",6:"Sáb"};
 const storedDay=localStorage.getItem("day");
-let day=storedDay||dayMap[new Date().getDay()]||"Ter";
+const validDays=Object.keys(workouts);
+let day=(storedDay && validDays.includes(storedDay))
+  ? storedDay
+  : (dayMap[new Date().getDay()] || "Ter");
+if (!validDays.includes(day)) day="Ter";
+localStorage.setItem("day",day);
 const key=(d,i,s,t)=>`${t}_${d}_${i}_${s}`;
 const seriesCount=t=>{const m=String(t).match(/\d+/);return m?parseInt(m[0]):1};
 
@@ -203,6 +208,7 @@ function render(){
  renderTabs(); renderWorkout(); renderHistory();
 }
 function renderWorkout(){
+ if(!workouts[day]){day="Ter";localStorage.setItem("day",day)}
  const w=workouts[day];
  document.querySelector("#heroTitle").textContent=w.title;
  document.querySelector("#heroDesc").textContent=w.desc;
