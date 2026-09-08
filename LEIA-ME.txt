@@ -1,27 +1,22 @@
-MEU TREINO V2 — ARQUIVOS PARA SUBSTITUIR NO GITHUB
+MEU TREINO V2.1 — CORREÇÃO DE CACHE NO IPHONE
 
-Arquivos principais:
+Esta versão mantém os recursos da V2, mas remove o service worker que estava
+causando inconsistência de cache no Safari/PWA do iPhone.
+
+SUBSTITUA NO GITHUB:
 - index.html
 - app.js
 - styles.css
 - manifest.webmanifest
-- sw.js
 - icon-192.png
 - icon-512.png
 
-Atualizações da versão 2:
-- cronômetro compacto/recolhível;
-- campos de carga e repetições maiores;
-- check por série;
-- mostra a última carga/repetições salvas para o exercício;
-- botão Próximo exercício;
-- histórico de treinos;
-- seleção automática do treino do dia;
-- aviso de instalação oculto quando aberto como app;
-- ilustrações de início/final mais claras;
-- service worker atualizado para forçar a nova versão.
+E APAGUE DO REPOSITÓRIO:
+- sw.js
 
-IMPORTANTE:
-Substitua os arquivos antigos do repositório pelos arquivos desta pasta.
-O endereço do GitHub Pages permanece o mesmo.
-Os dados salvos no iPhone continuam no mesmo domínio.
+Como confirmar:
+No final da página aparecerá "Meu Treino • v2.1".
+
+A V2.1 também tenta desregistrar o service worker antigo e apagar apenas os
+caches técnicos do site. Ela NÃO executa localStorage.clear(), portanto não
+limpa intencionalmente cargas, repetições ou histórico salvos em localStorage.

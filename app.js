@@ -221,5 +221,16 @@ function clearWeek(){
    }));renderWorkout()
  }
 }
-if("serviceWorker" in navigator) window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"));
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map(r => r.unregister()));
+      if ("caches" in window) {
+        const names = await caches.keys();
+        await Promise.all(names.map(n => caches.delete(n)));
+      }
+    } catch (e) {}
+  });
+}
 render();paint();
