@@ -1,22 +1,29 @@
-MEU TREINO V2.1 — CORREÇÃO DE CACHE NO IPHONE
+MEU TREINO — NOVA BASE v1.0
 
-Esta versão mantém os recursos da V2, mas remove o service worker que estava
-causando inconsistência de cache no Safari/PWA do iPhone.
+Esta versão foi refeita do zero.
 
-SUBSTITUA NO GITHUB:
-- index.html
-- app.js
-- styles.css
-- manifest.webmanifest
-- icon-192.png
-- icon-512.png
+Características:
+- arquivo único index.html;
+- sem service worker;
+- sem manifest;
+- sem dependências externas;
+- 5 dias de treino;
+- registro de carga e repetições;
+- conclusão por série e por exercício;
+- progresso do treino;
+- cronômetro de 90 segundos;
+- histórico local;
+- reset semanal preservando cargas e histórico.
 
-E APAGUE DO REPOSITÓRIO:
-- sw.js
+INSTALAÇÃO NO GITHUB
+1. Substitua SOMENTE index.html.
+2. O sw.js deve continuar excluído.
+3. Os arquivos antigos app.js, styles.css, manifest e ícones podem permanecer;
+   esta nova versão não depende deles.
 
-Como confirmar:
-No final da página aparecerá "Meu Treino • v2.1".
+TESTE
+Abra:
+https://magalhae.github.io/meu-treino/?novo=1
 
-A V2.1 também tenta desregistrar o service worker antigo e apagar apenas os
-caches técnicos do site. Ela NÃO executa localStorage.clear(), portanto não
-limpa intencionalmente cargas, repetições ou histórico salvos em localStorage.
+A confirmação visual é o rodapé:
+Meu Treino • nova base v1.0
