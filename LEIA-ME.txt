@@ -1,29 +1,17 @@
-MEU TREINO — NOVA BASE v1.0
+MEU TREINO V2.6
 
-Esta versão foi refeita do zero.
+Foco: imagens maiores para aprender a execução.
 
-Características:
-- arquivo único index.html;
-- sem service worker;
-- sem manifest;
-- sem dependências externas;
-- 5 dias de treino;
-- registro de carga e repetições;
-- conclusão por série e por exercício;
-- progresso do treino;
-- cronômetro de 90 segundos;
-- histórico local;
-- reset semanal preservando cargas e histórico.
+Melhorias:
+- cada exercício mostra uma ilustração grande;
+- as imagens mostram início/final do movimento quando aplicável;
+- toque na imagem para ampliar;
+- “Como fazer” fica destacado logo abaixo;
+- mantém cronômetro, histórico, último treino, séries, carga e repetições;
+- continua sem service worker.
 
-INSTALAÇÃO NO GITHUB
-1. Substitua SOMENTE index.html.
-2. O sw.js deve continuar excluído.
-3. Os arquivos antigos app.js, styles.css, manifest e ícones podem permanecer;
-   esta nova versão não depende deles.
+No GitHub:
+substitua SOMENTE index.html.
 
-TESTE
-Abra:
-https://magalhae.github.io/meu-treino/?novo=1
-
-A confirmação visual é o rodapé:
-Meu Treino • nova base v1.0
+Teste:
+https://magalhae.github.io/meu-treino/?v=2.6
